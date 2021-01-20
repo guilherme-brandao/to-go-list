@@ -6,3 +6,8 @@ type Task struct {
 	Desc  string `json:"desc" binding:"required"`
 }
 
+// type ToDoList struct {
+// 	ListId		string	`json:"listId"`
+// 	ListTitle 	string	`json:"listTitle" binding:"required"`
+// 	ListTasks	[]Task 	`json:"tasks"`
+// }
