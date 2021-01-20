@@ -1,31 +1,34 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/guilherme-brandao/to-go-list/models"
-	"github.com/guilherme-brandao/to-go-list/services"
+	"github.com/guilherme-brandao/to-go-list/services" 
+	"github.com/gin-gonic/gin"
 )
 
 type TaskController interface {
-	Save(ctx *gin.Context) models.Task
+	Save(ctx *gin.Context) error
 	FindAll() []models.Task
 }
 
 type controller struct {
-	service service.TaskService
+	service services.TaskService
 }
 
-func New(service service.TaskService) TaskController {
+func New(service services.TaskService) TaskController {
 	return &controller{
 		service: service,
 	}
 }
 
-func (c *controller) Save(ctx *gin.Context) models.Task {
+func (c *controller) Save(ctx *gin.Context) error {
 	var task models.Task
-	ctx.Bind(&task)
+	err := ctx.ShouldBindJSON(&task)
+	if err != nil {
+		return err
+	}
 	c.service.Save(task)
-	return task
+	return nil
 }
 
 func (c *controller) FindAll() []models.Task {
