@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/guilherme-brandao/to-go-list/controllers"
+	"github.com/guilherme-brandao/to-go-list/database"
 	"github.com/guilherme-brandao/to-go-list/middlewares"
 	"github.com/guilherme-brandao/to-go-list/services"
 )
@@ -19,6 +21,10 @@ var (
 )
 
 func main() {
+	database.Init()
+	collection := database.GetCollection("task-manager")
+
+	fmt.Println(collection)
 
 	server := gin.New()
 
