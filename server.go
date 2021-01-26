@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +21,6 @@ var (
 
 func main() {
 	database.Init()
-	collection := database.GetCollection("task-manager")
-
-	fmt.Println(collection)
 
 	server := gin.New()
 
@@ -54,6 +50,18 @@ func main() {
 			} else {
 				ctx.JSON(http.StatusOK, gin.H{"message": "Task included with success!"})
 			}
+		})
+
+		apiRoutes.GET("/tasks/:id", func(ctx *gin.Context) {
+			ctx.JSON(200, taskControllers.GetTask(ctx))
+		})
+
+		apiRoutes.POST("/tasks/update/:id", func(ctx *gin.Context) {
+			ctx.JSON(200, taskControllers.Update(ctx))
+		})
+
+		apiRoutes.POST("/tasks/delete/:id", func(ctx *gin.Context) {
+			ctx.JSON(200, taskControllers.Delete(ctx))
 		})
 	}
 

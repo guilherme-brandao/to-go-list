@@ -9,6 +9,9 @@ import (
 type TaskController interface {
 	Save(ctx *gin.Context) error
 	FindAll() []models.Task
+	GetTask(ctx *gin.Context) models.Task
+	Update(ctx *gin.Context) models.Task
+	Delete(ctx *gin.Context) error
 }
 
 type controller struct {
@@ -33,4 +36,24 @@ func (c *controller) Save(ctx *gin.Context) error {
 
 func (c *controller) FindAll() []models.Task {
 	return c.service.FindAll()
+}
+
+func (c *controller) GetTask(ctx *gin.Context) models.Task {
+	idTask := ctx.Param("id")
+
+	return c.service.GetTask(idTask)
+}
+
+func (c *controller) Update(ctx *gin.Context) models.Task {
+	var task models.Task
+	ctx.ShouldBindJSON(&task)
+	idTask := ctx.Param("id")
+
+	return c.service.Update(idTask, task)
+}
+
+func (c *controller) Delete(ctx *gin.Context) error {
+	idTask := ctx.Param("id")
+
+	return c.service.Delete(idTask)
 }
