@@ -11,11 +11,11 @@ import (
 )
 
 var (
-	taskService  services.TaskService  = services.New()
+	listService  services.ListService  = services.New()
 	loginService services.LoginService = services.NewLoginService()
 	jwtService   services.JWTService   = services.NewJWTService()
 
-	taskControllers  controllers.TaskController  = controllers.New(taskService)
+	taskControllers  controllers.TaskController  = controllers.New(listService)
 	loginControllers controllers.LoginController = controllers.NewLoginController(loginService, jwtService)
 )
 
@@ -39,12 +39,12 @@ func main() {
 
 	apiRoutes := server.Group("/api", middlewares.AuthorizeJWT())
 	{
-		apiRoutes.GET("/tasks", func(ctx *gin.Context) {
+		apiRoutes.GET("/lists", func(ctx *gin.Context) {
 			ctx.JSON(200, taskControllers.FindAll())
 		})
 
-		apiRoutes.POST("/tasks", func(ctx *gin.Context) {
-			err := taskControllers.Save(ctx)
+		apiRoutes.POST("/lists", func(ctx *gin.Context) {
+			err := taskControllers.NewList(ctx)
 			if err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			} else {
@@ -52,16 +52,21 @@ func main() {
 			}
 		})
 
-		apiRoutes.GET("/tasks/:id", func(ctx *gin.Context) {
-			ctx.JSON(200, taskControllers.GetTask(ctx))
+		apiRoutes.POST("/task/:idList", func(ctx *gin.Context) {
+			err := taskControllers.NewTask(ctx)
+			if err != nil {
+				ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			} else {
+				ctx.JSON(http.StatusOK, gin.H{"message": "Task included with success!"})
+			}
 		})
 
-		apiRoutes.POST("/tasks/update/:id", func(ctx *gin.Context) {
-			ctx.JSON(200, taskControllers.Update(ctx))
+		apiRoutes.GET("/lists/:id", func(ctx *gin.Context) {
+			ctx.JSON(200, taskControllers.GetList(ctx))
 		})
 
-		apiRoutes.POST("/tasks/delete/:id", func(ctx *gin.Context) {
-			ctx.JSON(200, taskControllers.Delete(ctx))
+		apiRoutes.POST("/task-delete/:idList/:idTask", func(ctx *gin.Context) {
+			ctx.JSON(200, taskControllers.DeleteTask(ctx))
 		})
 	}
 

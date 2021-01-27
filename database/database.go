@@ -19,7 +19,7 @@ func GetCollection(collectionName string) *mongo.Collection {
 
 func Init() {
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://guilherme152:tH6s6LwJ48aBA6w6@healthcons.gwr9o.mongodb.net/to-do-list?retryWrites=true&w=majority"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("MONGO_URL"))
 	if err != nil {
 		log.Fatal(err)
 	}
