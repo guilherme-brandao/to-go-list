@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log"
 	"time"
-
+	"os"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -19,7 +20,12 @@ func GetCollection(collectionName string) *mongo.Collection {
 
 func Init() {
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("MONGO_URL"))
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	client, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("MONGODB_URL")))
 	if err != nil {
 		log.Fatal(err)
 	}
